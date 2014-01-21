@@ -15,7 +15,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-
 package tw.edu.sju.ee.eea.jni.scope;
 
 import java.io.IOException;
@@ -28,7 +27,7 @@ import tw.edu.sju.ee.commons.nativeutils.NativeUtils;
  * @author Leo
  */
 public class NIScope {
-    
+
     static {
         try {
             NativeUtils.loadLibraryFromJar("jniNIScope");
@@ -50,6 +49,10 @@ public class NIScope {
         super.finalize();
     }
 
+    private void warning(String msg) {
+        Logger.getLogger(NIScope.class.getName()).log(Level.WARNING, msg);
+    }
+
     //**************************************************************************
     //Native Object
     private native void construct();
@@ -59,6 +62,37 @@ public class NIScope {
     public native boolean isAlive();
 
     //**************************************************************************
+    //988
+    public static class WFMInfo {
+
+        double absoluteInitialX;
+        double relativeInitialX;
+        double xIncrement;
+        int actualSamples;
+        double offset;
+        double gain;
+        double reserved1;
+        double reserved2;
+    }
+
+    //**************************************************************************
+    //855
+    public native void init(String resourceName, boolean IDQuery, boolean resetDevice) throws NIScopeException;
+
+    //866
+    public native void close();
+
+    //869
+    public native void autoSetup() throws NIScopeException;
+
+    //1031
+    public native void read(String channelList, double timeout, int numSamples, double[] wfm, WFMInfo wfmInfo) throws NIScopeException;
+
+    //1092
+    public native int actualRecordLength() throws NIScopeException;
+
+    public native double sampleRate() throws NIScopeException;
+
     //**************************************************************************
     //Test----------------------------------------------------------------------
     public native void test();

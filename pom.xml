@@ -24,7 +24,9 @@
                             <tasks>
                                 <property name="native.classpath" refid="maven.compile.classpath" />
                                 <echo file="${project.build.directory}/compile-classpath" message="${native.classpath}" />
-                                <exec dir="src/main/native" executable="mingw32-make" failonerror="true"/>
+                                <exec dir="src/main/native" executable="mingw32-make" failonerror="true">
+                                    <arg line="CONF=Release"/>
+                                </exec>
                             </tasks>
                         </configuration>
                     </execution>

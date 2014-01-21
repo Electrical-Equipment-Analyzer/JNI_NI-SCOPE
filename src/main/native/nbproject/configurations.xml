@@ -12,6 +12,8 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>src/NativeUtils.cpp</itemPath>
+      <itemPath>src/NativeUtils.h</itemPath>
       <itemPath>src/niScope.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -38,22 +40,26 @@
       <compileType>
         <ccTool>
           <incDir>
-            <pElem>${TARGET_DIR}/header</pElem>
-            <pElem>${JAVA_HOME}/include</pElem>
-            <pElem>${JAVA_HOME}/include/win32</pElem>
-            <pElem>${IVI_Foundation_HOME}/VISA/Win64/Include</pElem>
+            <pElem>../../../target/header</pElem>
+            <pElem>C:/Program Files/Java/jdk1.7.0_45/include</pElem>
+            <pElem>C:/Program Files/Java/jdk1.7.0_45/include/win32</pElem>
+            <pElem>C:/Program Files/IVI Foundation/VISA/Win64/Include</pElem>
           </incDir>
         </ccTool>
         <linkerTool>
           <output>${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/jniNIScope.${CND_DLIB_EXT}</output>
           <linkerAddLib>
-            <pElem>${IVI_Foundation_HOME}/IVI/Bin</pElem>
+            <pElem>C:/Program Files/IVI Foundation/IVI/Bin</pElem>
           </linkerAddLib>
           <linkerLibItems>
             <linkerLibLibItem>niScope_64</linkerLibLibItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
+      <item path="src/NativeUtils.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/NativeUtils.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/niScope.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
@@ -69,6 +75,12 @@
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
+          <incDir>
+            <pElem>${TARGET_DIR}/header</pElem>
+            <pElem>${JAVA_HOME}/include</pElem>
+            <pElem>${JAVA_HOME}/include/win32</pElem>
+            <pElem>${IVI_Foundation_HOME}/VISA/Win64/Include</pElem>
+          </incDir>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>
@@ -76,7 +88,20 @@
         <asmTool>
           <developmentMode>5</developmentMode>
         </asmTool>
+        <linkerTool>
+          <output>${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/jniNIScope.${CND_DLIB_EXT}</output>
+          <linkerAddLib>
+            <pElem>${IVI_Foundation_HOME}/IVI/Bin</pElem>
+          </linkerAddLib>
+          <linkerLibItems>
+            <linkerLibLibItem>niScope_64</linkerLibLibItem>
+          </linkerLibItems>
+        </linkerTool>
       </compileType>
+      <item path="src/NativeUtils.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/NativeUtils.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/niScope.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>

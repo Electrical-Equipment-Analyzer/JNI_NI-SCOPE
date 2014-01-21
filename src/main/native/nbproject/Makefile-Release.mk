@@ -35,6 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/src/NativeUtils.o \
 	${OBJECTDIR}/src/niScope.o
 
 
@@ -52,20 +53,25 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=
+LDLIBSOPTIONS=-L${IVI_Foundation_HOME}/IVI/Bin -lniScope_64
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libnative.${CND_DLIB_EXT}
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/jniNIScope.${CND_DLIB_EXT}
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libnative.${CND_DLIB_EXT}: ${OBJECTFILES}
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/jniNIScope.${CND_DLIB_EXT}: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libnative.${CND_DLIB_EXT} ${OBJECTFILES} ${LDLIBSOPTIONS} -shared
+	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/jniNIScope.${CND_DLIB_EXT} ${OBJECTFILES} ${LDLIBSOPTIONS} -shared
+
+${OBJECTDIR}/src/NativeUtils.o: src/NativeUtils.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -I${TARGET_DIR}/header -I${JAVA_HOME}/include -I${JAVA_HOME}/include/win32 -I${IVI_Foundation_HOME}/VISA/Win64/Include  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/NativeUtils.o src/NativeUtils.cpp
 
 ${OBJECTDIR}/src/niScope.o: src/niScope.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/niScope.o src/niScope.cpp
+	$(COMPILE.cc) -O2 -I${TARGET_DIR}/header -I${JAVA_HOME}/include -I${JAVA_HOME}/include/win32 -I${IVI_Foundation_HOME}/VISA/Win64/Include  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/niScope.o src/niScope.cpp
 
 # Subprojects
 .build-subprojects:
@@ -73,7 +79,7 @@ ${OBJECTDIR}/src/niScope.o: src/niScope.cpp
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libnative.${CND_DLIB_EXT}
+	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/jniNIScope.${CND_DLIB_EXT}
 
 # Subprojects
 .clean-subprojects:

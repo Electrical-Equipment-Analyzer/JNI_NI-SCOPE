@@ -2,13 +2,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>tw.edu.sju.ee.eea</groupId>
+    <groupId>tw.edu.sju.ee.eea.jni</groupId>
     <artifactId>jni-scope</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>sju-daq.jni-scope</name>
-    <url>http://maven.apache.org</url>
+
+    <parent>
+        <groupId>tw.edu.sju.ee.eea</groupId>
+        <artifactId>eea-parent</artifactId>
+        <version>1.0</version>
+    </parent>
+
     <build>
         <plugins>
             <plugin>
@@ -55,7 +61,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>tw.edu.sju.ee</groupId>
+            <groupId>tw.edu.sju.ee.eea.commons</groupId>
             <artifactId>commons-nativeutils</artifactId>
             <version>1.0</version>
             <type>jar</type>

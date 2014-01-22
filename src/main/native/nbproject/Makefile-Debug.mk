@@ -53,7 +53,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-L\\"C\:/Program\ Files/IVI\ Foundation\\"/IVI/Bin -lniScope_64
+LDLIBSOPTIONS=-L/C/Program\ Files/IVI\ Foundation/IVI/Bin -lniScope_64
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -66,12 +66,12 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/jniNIScope.${CND_DLIB_EXT}: ${OBJECTF
 ${OBJECTDIR}/src/NativeUtils.o: src/NativeUtils.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../../../target/header -I\\"C\:/Program\ Files/Java/jdk1.7.0_45\\"/include -I\\"C\:/Program\ Files/Java/jdk1.7.0_45\\"/include/win32 -I\\"C\:/Program\ Files/IVI\ Foundation\\"/VISA/Win64/Include  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/NativeUtils.o src/NativeUtils.cpp
+	$(COMPILE.cc) -g -I../../../target/header -I/C/Program\ Files/Java/jdk1.7.0_45/include -I/C/Program\ Files/Java/jdk1.7.0_45/include/win32 -I/C/Program\ Files/IVI\ Foundation/VISA/Win64/Include  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/NativeUtils.o src/NativeUtils.cpp
 
 ${OBJECTDIR}/src/niScope.o: src/niScope.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../../../target/header -I\\"C\:/Program\ Files/Java/jdk1.7.0_45\\"/include -I\\"C\:/Program\ Files/Java/jdk1.7.0_45\\"/include/win32 -I\\"C\:/Program\ Files/IVI\ Foundation\\"/VISA/Win64/Include  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/niScope.o src/niScope.cpp
+	$(COMPILE.cc) -g -I../../../target/header -I/C/Program\ Files/Java/jdk1.7.0_45/include -I/C/Program\ Files/Java/jdk1.7.0_45/include/win32 -I/C/Program\ Files/IVI\ Foundation/VISA/Win64/Include  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/niScope.o src/niScope.cpp
 
 # Subprojects
 .build-subprojects:

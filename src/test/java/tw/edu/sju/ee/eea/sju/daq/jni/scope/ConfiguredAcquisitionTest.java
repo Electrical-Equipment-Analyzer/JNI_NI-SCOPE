@@ -28,9 +28,9 @@ import tw.edu.sju.ee.eea.jni.scope.NIScopeException;
  *
  * @author Leo
  */
-public class Test extends TestCase {
+public class ConfiguredAcquisitionTest extends TestCase {
 
-    public Test(String testName) {
+    public ConfiguredAcquisitionTest(String testName) {
         super(testName);
     }
 
@@ -44,8 +44,9 @@ public class Test extends TestCase {
         super.tearDown();
     }
 
-    // TODO add test methods here. The name must begin with 'test'. For example:
     public void test() {
+
+        String channelList = "0,1";
 
         NIScope niScope = null;
         try {
@@ -53,24 +54,45 @@ public class Test extends TestCase {
             // Open the NI-SCOPE instrument handle
             niScope.init("PXI1Slot4", false, false);
 
-            // Call auto setup, finds a signal and configures all necessary parameters
-            niScope.autoSetup();
+            // Configure the acquisition type
+            niScope.configureAcquisition(NIScope.VAL_NORMAL);
 
-            // Get the actual record length and actual sample rate that will be used
+            // Configure the vertical parameters
+            niScope.configureVertical(channelList, 10, 0, NIScope.VAL_DC, 1, true);
+
+            // Configure the channel characteristics
+            niScope.configureChanCharacteristics(channelList, NIScope.VAL_1_MEG_OHM, 0);
+
+            // Configure the horizontal parameters
+            niScope.configureHorizontalTiming(12800, 1024, 50.0, 1, true);
+
+            niScope.setAttributeViBoolean(channelList, NIScope.ATTR_ENABLE_TIME_INTERLEAVED_SAMPLING, false);
+
+            niScope.configureTriggerImmediate();
+
+            // Initiate the acquisition
+            niScope.initiateAcquisition();
+
+            int actualNumWfms = niScope.actualNumWfms(channelList);
             int actualRecordLength = niScope.actualRecordLength();
-            double sampleRate = niScope.sampleRate();
 
-            // Read the data (Initiate the acquisition, and fetch the data)
-            double waveform[] = new double[actualRecordLength * 2];
-            NIScope.WFMInfo wfmInfo[] = new NIScope.WFMInfo[2];
-            niScope.read("0,1", 5, actualRecordLength, waveform, wfmInfo);
+            // Allocate space for the waveform and waveform info according to the 
+            // record length and number of waveforms
+            NIScope.WFMInfo wfmInfo[] = new NIScope.WFMInfo[actualNumWfms];
+            double waveform[] = new double[actualRecordLength * actualNumWfms];
+
+            // Fetch the data
+            niScope.fetch(channelList, 5, actualRecordLength, waveform, wfmInfo);
+
+            double sampleRate = niScope.sampleRate();
 
             System.out.println("Actual record length: " + actualRecordLength);
             System.out.println("Actual sample rate: " + sampleRate);
+
             for (int i = 0; i < wfmInfo.length; i++) {
                 System.out.println(wfmInfo[i]);
             }
-
+            
             System.out.println(Arrays.toString(Arrays.copyOfRange(waveform, 0, actualRecordLength)));
             System.out.println(Arrays.toString(Arrays.copyOfRange(waveform, actualRecordLength, actualRecordLength * 2)));
 

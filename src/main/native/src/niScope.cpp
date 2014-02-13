@@ -2,7 +2,6 @@
 #include "NativeUtils.h"
 #include "tw_edu_sju_ee_eea_jni_scope_NIScope.h"
 
-
 JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_construct
 (JNIEnv *env, jobject obj) {
     niScope *niScope_struct = (niScope *) malloc(sizeof (*niScope_struct));
@@ -37,21 +36,78 @@ JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_autoSetup
     handleErrOverride(niScope_AutoSetup(getStruct(env, obj)->viSession));
 }
 
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_configureVertical
+(JNIEnv *env, jobject obj, jstring channelList, jdouble range, jdouble offset, jint coupling, jdouble probeAttenuation, jboolean enabled) {
+    handleErrOverride(niScope_ConfigureVertical(getStruct(env, obj)->viSession, toChars(env, channelList), range, offset, coupling, probeAttenuation, enabled));
+}
+
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_configureChanCharacteristics
+(JNIEnv *env, jobject obj, jstring channelList, jdouble inputImpedance, jdouble maxInputFrequency) {
+    handleErrOverride(niScope_ConfigureChanCharacteristics(getStruct(env, obj)->viSession, toChars(env, channelList), inputImpedance, maxInputFrequency));
+}
+
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_configureHorizontalTiming
+(JNIEnv *env, jobject obj, jdouble minSampleRate, jint minNumPts, jdouble refPosition, jint numRecords, jboolean enforceRealtime) {
+    handleErrOverride(niScope_ConfigureHorizontalTiming(getStruct(env, obj)->viSession, minSampleRate, minNumPts, refPosition, numRecords, enforceRealtime));
+}
+
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_configureTriggerImmediate
+(JNIEnv *env, jobject obj) {
+    handleErrOverride(niScope_ConfigureTriggerImmediate(getStruct(env, obj)->viSession));
+}
+
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_configureAcquisition
+(JNIEnv *env, jobject obj, jint acquisitionType) {
+    handleErrOverride(niScope_ConfigureAcquisition(getStruct(env, obj)->viSession, acquisitionType));
+}
+
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_initiateAcquisition
+(JNIEnv *env, jobject obj) {
+    handleErrOverride(niScope_InitiateAcquisition(getStruct(env, obj)->viSession));
+}
+
+jobject wfmInfoTrans(JNIEnv *env, jobject obj, struct niScope_wfmInfo* wfmInfo) {
+    jclass clazz = env->FindClass("tw/edu/sju/ee/eea/jni/scope/NIScope$WFMInfo");
+    jmethodID constructor = env->GetMethodID(clazz, "<init>", "()V");
+    jobject jwfmInfo = env->NewObject(clazz, constructor);
+    env->SetDoubleField(jwfmInfo, env->GetFieldID(clazz, "absoluteInitialX", "D"), wfmInfo->absoluteInitialX);
+    env->SetDoubleField(jwfmInfo, env->GetFieldID(clazz, "relativeInitialX", "D"), wfmInfo->relativeInitialX);
+    env->SetDoubleField(jwfmInfo, env->GetFieldID(clazz, "xIncrement", "D"), wfmInfo->xIncrement);
+    env->SetIntField(jwfmInfo, env->GetFieldID(clazz, "actualSamples", "I"), wfmInfo->actualSamples);
+    env->SetDoubleField(jwfmInfo, env->GetFieldID(clazz, "offset", "D"), wfmInfo->offset);
+    env->SetDoubleField(jwfmInfo, env->GetFieldID(clazz, "gain", "D"), wfmInfo->gain);
+    env->SetDoubleField(jwfmInfo, env->GetFieldID(clazz, "reserved1", "D"), wfmInfo->reserved1);
+    env->SetDoubleField(jwfmInfo, env->GetFieldID(clazz, "reserved2", "D"), wfmInfo->reserved2);
+    return jwfmInfo;
+}
+
 JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_read
-(JNIEnv *env, jobject obj, jstring channelList, jdouble timeout, jint numSamples, jdoubleArray jwfm, jobject jwfmInfo) {
+(JNIEnv *env, jobject obj, jstring channelList, jdouble timeout, jint numSamples, jdoubleArray jwfm, jobjectArray jwfmInfo) {
     ViReal64 wfm[env->GetArrayLength(jwfm)];
-    struct niScope_wfmInfo wfmInfo;
-    handleErrOverride(niScope_Read(getStruct(env, obj)->viSession, toChars(env, channelList), timeout, numSamples, wfm, &wfmInfo));
+    niScope_wfmInfo wfmInfo[env->GetArrayLength(jwfmInfo)];
+    handleErrOverride(niScope_Read(getStruct(env, obj)->viSession, toChars(env, channelList), timeout, numSamples, wfm, wfmInfo));
     env->SetDoubleArrayRegion(jwfm, 0, env->GetArrayLength(jwfm), (const jdouble*) wfm);
-    jclass clazz = env->GetObjectClass(jwfmInfo);
-    env->SetDoubleField(jwfmInfo, env->GetFieldID(clazz, "absoluteInitialX", "D"), wfmInfo.absoluteInitialX);
-    env->SetDoubleField(jwfmInfo, env->GetFieldID(clazz, "relativeInitialX", "D"), wfmInfo.relativeInitialX);
-    env->SetDoubleField(jwfmInfo, env->GetFieldID(clazz, "xIncrement", "D"), wfmInfo.xIncrement);
-    env->SetIntField(jwfmInfo, env->GetFieldID(clazz, "actualSamples", "I"), wfmInfo.actualSamples);
-    env->SetDoubleField(jwfmInfo, env->GetFieldID(clazz, "offset", "D"), wfmInfo.offset);
-    env->SetDoubleField(jwfmInfo, env->GetFieldID(clazz, "gain", "D"), wfmInfo.gain);
-    env->SetDoubleField(jwfmInfo, env->GetFieldID(clazz, "reserved1", "D"), wfmInfo.reserved1);
-    env->SetDoubleField(jwfmInfo, env->GetFieldID(clazz, "reserved2", "D"), wfmInfo.reserved2);
+    for (int i = 0; i < env->GetArrayLength(jwfmInfo); i++) {
+        env->SetObjectArrayElement(jwfmInfo, i, wfmInfoTrans(env, obj, &wfmInfo[i]));
+    }
+}
+
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_fetch
+(JNIEnv *env, jobject obj, jstring channelList, jdouble timeout, jint numSamples, jdoubleArray jwfm, jobjectArray jwfmInfo) {
+    ViReal64 wfm[env->GetArrayLength(jwfm)];
+    niScope_wfmInfo wfmInfo[env->GetArrayLength(jwfmInfo)];
+    handleErrOverride(niScope_Fetch(getStruct(env, obj)->viSession, toChars(env, channelList), timeout, numSamples, wfm, wfmInfo));
+    env->SetDoubleArrayRegion(jwfm, 0, env->GetArrayLength(jwfm), (const jdouble*) wfm);
+    for (int i = 0; i < env->GetArrayLength(jwfmInfo); i++) {
+        env->SetObjectArrayElement(jwfmInfo, i, wfmInfoTrans(env, obj, &wfmInfo[i]));
+    }
+}
+
+JNIEXPORT jint JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_actualNumWfms
+(JNIEnv *env, jobject obj, jstring channelList) {
+    ViInt32 numWfms;
+    handleErrOverride(niScope_ActualNumWfms(getStruct(env, obj)->viSession, toChars(env, channelList), &numWfms));
+    return numWfms;
 }
 
 JNIEXPORT jint JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_actualRecordLength
@@ -68,72 +124,43 @@ JNIEXPORT jdouble JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_sampleRate
     return actualSampleRate;
 }
 
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_setAttributeViBoolean
+(JNIEnv *env, jobject obj, jstring channelList, jint attributeId, jboolean value) {
+    niScope_SetAttributeViBoolean(getStruct(env, obj)->viSession, toChars(env, channelList), attributeId, value);
+}
+
 JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_test
 (JNIEnv *env, jobject obj) {
     printf("Hello NIScope\n");
     fflush(stdout);
 
-    //    ViSession vi = VI_NULL;
+    ViSession vi = getStruct(env, obj)->viSession;
     ViStatus error = VI_SUCCESS;
     ViChar errorSource[MAX_FUNCTION_NAME_SIZE];
     ViChar errorMessage[MAX_ERROR_DESCRIPTION] = " ";
 
-    // Variables used to get values from the GUI
-    //    ViChar resourceName[MAX_STRING_SIZE];
-    //    ViChar channelName[MAX_STRING_SIZE];
-    ViInt32 actualRecordLength;
-    ViReal64 actualSampleRate;
-
-    // Default values used in this example
-    ViReal64 timeout = 5.000;
-
-    // Waveforms
-    struct niScope_wfmInfo wfmInfo;
-    ViReal64 *waveformPtr = NULL;
-
-    // set default values
-    //    strcpy(resourceName, "PXI1Slot4");
-    //    strcpy(channelName, "0");
-
     ViRsrc resourceName = "PXI1Slot4";
-    ViConstString channelList = "0,1";
+    ViConstString channelName = "0,1";
 
-    // Open the NI-SCOPE instrument handle
-    //    handleErr(niScope_init(resourceName, NISCOPE_VAL_FALSE, NISCOPE_VAL_FALSE, &getStruct(env, obj)->viSession));
-
-    // Call auto setup, finds a signal and configures all necessary parameters
-    //    handleErr(niScope_AutoSetup(getStruct(env, obj)->viSession));
-
-    // Get the actual record length and actual sample rate that will be used
-    handleErr(niScope_ActualRecordLength(getStruct(env, obj)->viSession, &actualRecordLength));
-
-    handleErr(niScope_SampleRate(getStruct(env, obj)->viSession, &actualSampleRate));
-
-    waveformPtr = (ViReal64*) malloc(sizeof (ViReal64) * actualRecordLength * 2);
-
-    // If memory allocation fails, return an error message
-    if (waveformPtr == NULL)
-        handleErr(NISCOPE_ERROR_INSUFFICIENT_MEMORY);
-
-    // Read the data (Initiate the acquisition, and fetch the data)
-    handleErr(niScope_Read(getStruct(env, obj)->viSession, channelList, timeout, actualRecordLength, waveformPtr, &wfmInfo));
-
-    printf("Actual record length: %d\n", actualRecordLength);
-    printf("Actual sample rate: %.2f\n", actualSampleRate);
-    printf("wfmInfo.actualSamples %d\n", wfmInfo.actualSamples);
-    int i;
-    for (i = 0; i < wfmInfo.actualSamples; i++) {
-        printf("%f, ", waveformPtr[i]);
-    }
-    printf("\n");
-    for (i = wfmInfo.actualSamples; i < wfmInfo.actualSamples * 2; i++) {
-        printf("%f, ", waveformPtr[i]);
-    }
-    printf("\n");
+    //    printf("Actual record length: %d\n", actualRecordLength);
+    //    printf("Actual sample rate: %.2f\n", actualSampleRate);
+    //    printf("wfmInfo.actualSamples %d\n", wfmInfoPtr[0].actualSamples);
+    //    int i;
+    //    for (i = 0; i < wfmInfoPtr->actualSamples; i++) {
+    //        printf("%f, ", waveformPtr[i]);
+    //    }
+    //    printf("\n");
+    //    for (i = wfmInfoPtr->actualSamples; i < wfmInfoPtr->actualSamples * 2; i++) {
+    //        printf("%f, ", waveformPtr[i]);
+    //    }
+    //    printf("\n");
 
 Error:
-    if (waveformPtr)
-        free(waveformPtr);
+
+    //    if (wfmInfoPtr)
+    //        free(wfmInfoPtr);
+    //    if (waveformPtr)
+    //        free(waveformPtr);
 
     // Display messages
     if (error != VI_SUCCESS) {

@@ -4,10 +4,10 @@
 
     <groupId>tw.edu.sju.ee.eea.jni</groupId>
     <artifactId>jni-scope</artifactId>
-    <version>1.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>sju-daq.jni-scope</name>
+    <name>EEA JNI NI-SCOPE</name>
 
     <parent>
         <groupId>tw.edu.sju.ee.eea</groupId>
@@ -61,9 +61,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>tw.edu.sju.ee.eea.commons</groupId>
-            <artifactId>commons-nativeutils</artifactId>
-            <version>1.0</version>
+            <groupId>tw.edu.sju.ee.eea.jni</groupId>
+            <artifactId>jni-util</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
     </dependencies>

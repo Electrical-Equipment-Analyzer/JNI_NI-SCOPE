@@ -18,9 +18,12 @@
 package tw.edu.sju.ee.eea.sju.daq.jni.scope;
 
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import junit.framework.TestCase;
+import tw.edu.sju.ee.eea.jni.modinst.NIModinstUtils;
 import tw.edu.sju.ee.eea.jni.scope.NIScope;
 import tw.edu.sju.ee.eea.jni.scope.NIScopeException;
 
@@ -43,16 +46,23 @@ public class ConfiguredAcquisitionTest extends TestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
     }
-
+    
     public void test() {
+        List<NIModinstUtils.Device> list = NIModinstUtils.list("niScope");
+        Iterator<NIModinstUtils.Device> iterator = list.iterator();
+        while (iterator.hasNext()) {
+            NIModinstUtils.Device next = iterator.next();
+            System.out.println(next.getDeviceName());
+            System.out.println(next.getDeviceModel());
+        }
 
-        String channelList = "0,1";
+        String channelList = "0,1,2,3";
 
         NIScope niScope = null;
         try {
             niScope = new NIScope();
             // Open the NI-SCOPE instrument handle
-            niScope.init("PXI1Slot4", false, false);
+            niScope.init("Dev1", false, false);
 
             // Configure the acquisition type
             niScope.configureAcquisition(NIScope.VAL_NORMAL);
@@ -64,7 +74,7 @@ public class ConfiguredAcquisitionTest extends TestCase {
             niScope.configureChanCharacteristics(channelList, NIScope.VAL_1_MEG_OHM, 0);
 
             // Configure the horizontal parameters
-            niScope.configureHorizontalTiming(12800, 1024, 50.0, 1, true);
+            niScope.configureHorizontalTiming(1000000, 1024, 50.0, 1, true);
 
             niScope.setAttributeViBoolean(channelList, NIScope.ATTR_ENABLE_TIME_INTERLEAVED_SAMPLING, false);
 

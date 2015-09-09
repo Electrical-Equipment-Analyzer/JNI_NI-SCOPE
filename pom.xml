@@ -66,5 +66,12 @@
             <version>1.0.1-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>tw.edu.sju.ee.eea.jni</groupId>
+            <artifactId>jni-modinst</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 </project>

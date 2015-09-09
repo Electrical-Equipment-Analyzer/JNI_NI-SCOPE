@@ -74,6 +74,8 @@ public class NIScope {
     //562
     public static final int VAL_NORMAL = IVIScope.VAL_NORMAL;
 
+    public static final String VAL_IMMEDIATE = "VAL_IMMEDIATE";
+
     //988
     public static class WFMInfo {
 
@@ -109,6 +111,7 @@ public class NIScope {
 
     public native void configureChanCharacteristics(String channelList, double inputImpedance, double maxInputFrequency) throws NIScopeException;
 
+    //886
     //Horizontal Subsystem Configuration ---------------------------------------
     public native void configureHorizontalTiming(double minSampleRate, int minNumPts, double refPosition, int numRecords, boolean enforceRealtime) throws NIScopeException;
 

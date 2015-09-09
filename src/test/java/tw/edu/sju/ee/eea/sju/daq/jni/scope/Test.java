@@ -51,7 +51,7 @@ public class Test extends TestCase {
         try {
             niScope = new NIScope();
             // Open the NI-SCOPE instrument handle
-            niScope.init("PXI1Slot4", false, false);
+            niScope.init("Dev1", false, false);
 
             // Call auto setup, finds a signal and configures all necessary parameters
             niScope.autoSetup();

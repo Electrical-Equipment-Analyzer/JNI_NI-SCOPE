@@ -99,47 +99,145 @@ public class NIScope {
     //855
     public native void init(String resourceName, boolean IDQuery, boolean resetDevice) throws NIScopeException;
 
-    //866
+    public native void initWithOptions(String resourceName, boolean IDQuery, boolean resetDevice, String optionString) throws NIScopeException;
+
     public native void close();
 
-    //869
     public native void autoSetup() throws NIScopeException;
 
-    //871
     //Vertical Subsystem Configuration -----------------------------------------
     public native void configureVertical(String channelList, double range, double offset, int coupling, double probeAttenuation, boolean enabled) throws NIScopeException;
 
     public native void configureChanCharacteristics(String channelList, double inputImpedance, double maxInputFrequency) throws NIScopeException;
 
-    //886
     //Horizontal Subsystem Configuration ---------------------------------------
     public native void configureHorizontalTiming(double minSampleRate, int minNumPts, double refPosition, int numRecords, boolean enforceRealtime) throws NIScopeException;
 
-    //943
+    public native void configureClock(String inputClockSource, String outputClockSource, String clockSyncPulseSource, boolean masterEnabled) throws NIScopeException;
+
+    public native void exportSignal(int signal, String signalIdentifier, String outputTerminal) throws NIScopeException;
+
+    public native void adjustSampleClockRelativeDelay(double delay) throws NIScopeException;
+
+    public native void configureTriggerEdge(String triggerSource, double level, int slope, int triggerCoupling, double holdoff, double delay) throws NIScopeException;
+
+    public native void configureTriggerHysteresis(String triggerSource, double level, double hysteresis, int slope, int triggerCoupling, double holdoff, double delay) throws NIScopeException;
+
+    public native void configureTriggerWindow(String triggerSource, double lowLevel, double highLevel, int windowMode, int triggerCoupling, double holdoff, double delay) throws NIScopeException;
+
+    public native void configureTriggerSoftware(double holdoff, double delay) throws NIScopeException;
+
+    public native void sendSoftwareTriggerEdge(int whichTrigger) throws NIScopeException;
+
     public native void configureTriggerImmediate() throws NIScopeException;
 
-    //976
+    public native void configureTriggerDigital(String triggerSource, int slope, double holdoff, double delay) throws NIScopeException;
+
+    public native void configureTriggerVideo(String triggerSource, boolean enableDCRestore, int signalFormat, int event, int lineNumber, /* ignored if not applicable */ int polarity, int triggerCoupling, double holdoff, double delay) throws NIScopeException;
+
+    public native double configureEqualizationFilterCoefficients(String channel, int numberOfCoefficients) throws NIScopeException;
+
+    public native int getFrequencyResponse(String channelName, int bufferSize, double[] frequencies, double[] amplitudes, double[] phases) throws NIScopeException;
+
     //Waveform Acquisition Subsystem -------------------------------------------
     public native void configureAcquisition(int acquisitionType) throws NIScopeException;
 
     public native void initiateAcquisition() throws NIScopeException;
+
+    public native void abort() throws NIScopeException;
+
+    public native void commit() throws NIScopeException;
 
     //1031
     public native void read(String channelList, double timeout, int numSamples, double[] wfm, WFMInfo[] wfmInfo) throws NIScopeException;
 
     public native void fetch(String channelList, double timeout, int numSamples, double[] wfm, WFMInfo[] wfmInfo) throws NIScopeException;
 
-    //1084
+    public native void fetchBinary8(String channelList, double timeout, int numSamples, byte wfm[], WFMInfo[] wfmInfo) throws NIScopeException;
+
+    public native void fetchBinary16(String channelList, double timeout, int numSamples, short wfm[], WFMInfo[] wfmInfo) throws NIScopeException;
+
+    //1059
+    public native void fetchBinary32(String channelList, double timeout, int numSamples, int wfm[], WFMInfo[] wfmInfo) throws NIScopeException;
+    //1066
+
+    //1073
+    //1081
+    public native int acquisitionStatus() throws NIScopeException;
+
     public native int actualNumWfms(String channelList) throws NIScopeException;
 
+    public native int actualMeasWfmSize(int arrayMeasFunction) throws NIScopeException;
+
     //1092
+
     public native int actualRecordLength() throws NIScopeException;
 
     public native double sampleRate() throws NIScopeException;
 
+    public native int sampleMode() throws NIScopeException;
+
+    /*--- Waveform Measurement Functions ----------------------------------------*/
+    public native void addWaveformProcessing(String channelList, int measFunction) throws NIScopeException;
+
+    public native void clearWaveformProcessing(String channelList) throws NIScopeException;
+
+    public native void slearWaveformMeasurementStats(String channelList, int measFunction) throws NIScopeException;
+
+    public native double readMeasurement(String channelList, double timeout, int scalarMeasFunction) throws NIScopeException;
+
+    public native double fetchMeasurement(String channelList, double timeout, int scalarMeasFunction) throws NIScopeException;
+
+    //1125
+    //1136
+    public native void reset() throws NIScopeException;
+
+    public native void disable() throws NIScopeException;
+
+    public native void resetDevice() throws NIScopeException;
+
+    //1155
+    //1162
+    public native void probeCompensationSignalStart() throws NIScopeException;
+
+    public native void probeCompensationSignalStop() throws NIScopeException;
+    //1170
+
+    //1176
+    //1181
+    //1186
+    //1192
+    //1194
+    /*--- Typesafe Get, Set, and Check Attribute Functions ---------------------*/
+    /* Note that the Get functions take a channelList but they return a single
+     value.  Therefore, these functions return an error if the return value differs
+     among the channels specified in the list. */
+    //1200
     //1221
     public native void setAttributeViBoolean(String channelList, int attributeId, boolean value) throws NIScopeException;
 
+    //1225
+    /*--- NI-5620 Specific Functions ----------------------------------------*/
+    public native int setDDCFilterCoefficients(String channel, int coefficientType, int numCoefficients) throws NIScopeException;
+
+    public native void calSetSerialDACVoltageEeprom(float serialDACVolts) throws NIScopeException;
+
+    public native void calSetADCVoltageEeprom(float adcVoltageGain, float adcVoltageOffset) throws NIScopeException;
+
+    public native float calSetFREeprom(int numCoefficients) throws NIScopeException;
+
+    public native float calGetSerialDACVoltageEeprom() throws NIScopeException;
+
+    //1248
+    public native float calGetFREeprom(int numCoefficients) throws NIScopeException;
+
+    //1257
+    //1260
+    //1264
+    //1269
+    //1275
+    //1281
+    //1288
     //**************************************************************************
     //Test----------------------------------------------------------------------
     public native void test();

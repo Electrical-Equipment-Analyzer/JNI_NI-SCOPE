@@ -26,6 +26,11 @@ JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_init
     handleErrOverride(niScope_init((ViRsrc) toChars(env, resourceName), IDQuery, resetDevice, &getStruct(env, obj)->viSession));
 }
 
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_initWithOptions
+(JNIEnv *env, jobject obj, jstring resourceName, jboolean IDQuery, jboolean resetDevice, jstring optionString) {
+    handleErrOverride(niScope_InitWithOptions((ViRsrc) toChars(env, resourceName), IDQuery, resetDevice, (ViConstString) toChars(env, optionString), &getStruct(env, obj)->viSession));
+}
+
 JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_close
 (JNIEnv *env, jobject obj) {
     niScope_close(getStruct(env, obj)->viSession);
@@ -51,9 +56,79 @@ JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_configureHorizon
     handleErrOverride(niScope_ConfigureHorizontalTiming(getStruct(env, obj)->viSession, minSampleRate, minNumPts, refPosition, numRecords, enforceRealtime));
 }
 
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_configureClock
+(JNIEnv *env, jobject obj, jstring inputClockSource, jstring outputClockSource, jstring clockSyncPulseSource, jboolean masterEnabled) {
+    handleErrOverride(niScope_ConfigureClock(getStruct(env, obj)->viSession, toChars(env, inputClockSource), toChars(env, outputClockSource), toChars(env, clockSyncPulseSource), masterEnabled));
+}
+
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_exportSignal
+(JNIEnv *env, jobject obj, jint signal, jstring signalIdentifier, jstring outputTerminal) {
+    handleErrOverride(niScope_ExportSignal(getStruct(env, obj)->viSession, signal, toChars(env, signalIdentifier), toChars(env, outputTerminal)));
+}
+
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_adjustSampleClockRelativeDelay
+(JNIEnv *env, jobject obj, jdouble delay) {
+    handleErrOverride(niScope_AdjustSampleClockRelativeDelay(getStruct(env, obj)->viSession, delay));
+}
+
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_configureTriggerEdge
+(JNIEnv *env, jobject obj, jstring triggerSource, jdouble level, jint slope, jint triggerCoupling, jdouble holdoff, jdouble delay) {
+    handleErrOverride(niScope_ConfigureTriggerEdge(getStruct(env, obj)->viSession, toChars(env, triggerSource), level, slope, triggerCoupling, holdoff, delay));
+}
+
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_configureTriggerHysteresis
+(JNIEnv *env, jobject obj, jstring triggerSource, jdouble level, jdouble hysteresis, jint slope, jint triggerCoupling, jdouble holdoff, jdouble delay) {
+    handleErrOverride(niScope_ConfigureTriggerHysteresis(getStruct(env, obj)->viSession, toChars(env, triggerSource), level, hysteresis, slope, triggerCoupling, holdoff, delay));
+}
+
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_configureTriggerWindow
+(JNIEnv *env, jobject obj, jstring triggerSource, jdouble lowLevel, jdouble highLevel, jint windowMode, jint triggerCoupling, jdouble holdoff, jdouble delay) {
+    handleErrOverride(niScope_ConfigureTriggerWindow(getStruct(env, obj)->viSession, toChars(env, triggerSource), lowLevel, highLevel, windowMode, triggerCoupling, holdoff, delay));
+}
+
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_configureTriggerSoftware
+(JNIEnv *env, jobject obj, jdouble holdoff, jdouble delay) {
+    handleErrOverride(niScope_ConfigureTriggerSoftware(getStruct(env, obj)->viSession, holdoff, delay));
+}
+
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_sendSoftwareTriggerEdge
+(JNIEnv *env, jobject obj, jint whichTrigger) {
+    handleErrOverride(niScope_SendSoftwareTriggerEdge(getStruct(env, obj)->viSession, whichTrigger));
+}
+
 JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_configureTriggerImmediate
 (JNIEnv *env, jobject obj) {
     handleErrOverride(niScope_ConfigureTriggerImmediate(getStruct(env, obj)->viSession));
+}
+
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_configureTriggerDigital
+(JNIEnv *env, jobject obj, jstring triggerSource, jint slope, jdouble holdoff, jdouble delay) {
+    handleErrOverride(niScope_ConfigureTriggerDigital(getStruct(env, obj)->viSession, toChars(env, triggerSource), slope, holdoff, delay));
+}
+
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_configureTriggerVideo
+(JNIEnv *env, jobject obj, jstring triggerSource, jboolean enableDCRestore, jint signalFormat, jint event, jint lineNumber, jint polarity, jint triggerCoupling, jdouble holdoff, jdouble delay) {
+    handleErrOverride(niScope_ConfigureTriggerVideo(getStruct(env, obj)->viSession, toChars(env, triggerSource), enableDCRestore, signalFormat, event, lineNumber, polarity, triggerCoupling, holdoff, delay));
+}
+
+JNIEXPORT jdouble JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_configureEqualizationFilterCoefficients
+(JNIEnv *env, jobject obj, jstring channel, jint numberOfCoefficients) {
+    ViReal64 coefficients;
+    handleErrOverride(niScope_ConfigureEqualizationFilterCoefficients(getStruct(env, obj)->viSession, toChars(env, channel), numberOfCoefficients, &coefficients));
+    return coefficients;
+}
+
+JNIEXPORT jint JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_getFrequencyResponse
+(JNIEnv *env, jobject obj, jstring channelName, jint bufferSize, jdoubleArray jfrequencies, jdoubleArray jamplitudes, jdoubleArray jphases) {
+    ViReal64 frequencies[env->GetArrayLength(jfrequencies)];
+    env->GetDoubleArrayRegion(jfrequencies, 0, env->GetArrayLength(jfrequencies),  (jdouble*) frequencies);
+    ViReal64 amplitudes[env->GetArrayLength(jamplitudes)];
+    env->GetDoubleArrayRegion(jamplitudes, 0, env->GetArrayLength(jamplitudes),  (jdouble*) amplitudes);
+    ViReal64 phases[env->GetArrayLength(jphases)];
+    env->GetDoubleArrayRegion(jphases, 0, env->GetArrayLength(jphases),  (jdouble*) phases);
+    ViInt32 numberOfFrequencies;
+    handleErrOverride(niScope_GetFrequencyResponse(getStruct(env, obj)->viSession, toChars(env, channelName), bufferSize, frequencies, amplitudes, phases, &numberOfFrequencies));
+    return numberOfFrequencies;
 }
 
 JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_configureAcquisition
@@ -64,6 +139,16 @@ JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_configureAcquisi
 JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_initiateAcquisition
 (JNIEnv *env, jobject obj) {
     handleErrOverride(niScope_InitiateAcquisition(getStruct(env, obj)->viSession));
+}
+
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_abort
+  (JNIEnv *env, jobject obj){
+   handleErrOverride(niScope_Abort(getStruct(env, obj)->viSession));
+}
+
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_commit
+  (JNIEnv *env, jobject obj){
+   handleErrOverride(niScope_Commit(getStruct(env, obj)->viSession)); 
 }
 
 jobject wfmInfoTrans(JNIEnv *env, jobject obj, struct niScope_wfmInfo* wfmInfo) {
@@ -103,11 +188,58 @@ JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_fetch
     }
 }
 
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_fetchBinary8
+  (JNIEnv *env, jobject obj, jstring channelList, jdouble timeout, jint numSamples, jbyteArray jwfm, jobjectArray jwfmInfo){
+    ViInt8 wfm[env->GetArrayLength(jwfm)];
+    niScope_wfmInfo wfmInfo[env->GetArrayLength(jwfmInfo)];
+    handleErrOverride(niScope_FetchBinary8(getStruct(env, obj)->viSession, toChars(env, channelList), timeout, numSamples, wfm, wfmInfo));
+    env->SetByteArrayRegion(jwfm, 0, env->GetArrayLength(jwfm), (const jbyte*) wfm);
+    for (int i = 0; i < env->GetArrayLength(jwfmInfo); i++) {
+        env->SetObjectArrayElement(jwfmInfo, i, wfmInfoTrans(env, obj, &wfmInfo[i]));
+    } 
+}
+
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_fetchBinary16
+  (JNIEnv *env, jobject obj, jstring channelList, jdouble timeout, jint numSamples, jshortArray jwfm, jobjectArray jwfmInfo){
+    ViInt16 wfm[env->GetArrayLength(jwfm)];
+    niScope_wfmInfo wfmInfo[env->GetArrayLength(jwfmInfo)];
+    handleErrOverride(niScope_FetchBinary16(getStruct(env, obj)->viSession, toChars(env, channelList), timeout, numSamples, wfm, wfmInfo));
+    env->SetShortArrayRegion(jwfm, 0, env->GetArrayLength(jwfm), (const jshort*) wfm);
+    for (int i = 0; i < env->GetArrayLength(jwfmInfo); i++) {
+        env->SetObjectArrayElement(jwfmInfo, i, wfmInfoTrans(env, obj, &wfmInfo[i]));
+    } 
+}
+
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_fetchBinary32
+  (JNIEnv *env, jobject obj, jstring channelList, jdouble timeout, jint numSamples, jintArray jwfm, jobjectArray jwfmInfo){
+    ViInt32 wfm[env->GetArrayLength(jwfm)];
+    niScope_wfmInfo wfmInfo[env->GetArrayLength(jwfmInfo)];
+    handleErrOverride(niScope_FetchBinary32(getStruct(env, obj)->viSession, toChars(env, channelList), timeout, numSamples, wfm, wfmInfo));
+    env->SetIntArrayRegion(jwfm, 0, env->GetArrayLength(jwfm), (const jint*) wfm);
+    for (int i = 0; i < env->GetArrayLength(jwfmInfo); i++) {
+        env->SetObjectArrayElement(jwfmInfo, i, wfmInfoTrans(env, obj, &wfmInfo[i]));
+    }
+}
+
+JNIEXPORT jint JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_acquisitionStatus
+  (JNIEnv *env, jobject obj){
+   ViInt32 status;
+   handleErrOverride(niScope_AcquisitionStatus(getStruct(env, obj)->viSession,&status));
+   return status;
+}
+
 JNIEXPORT jint JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_actualNumWfms
 (JNIEnv *env, jobject obj, jstring channelList) {
     ViInt32 numWfms;
     handleErrOverride(niScope_ActualNumWfms(getStruct(env, obj)->viSession, toChars(env, channelList), &numWfms));
     return numWfms;
+}
+
+JNIEXPORT jint JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_actualMeasWfmSize
+  (JNIEnv *env, jobject obj, jint arrayMeasFunction){
+    ViInt32 measWfmSize;
+    handleErrOverride(niScope_ActualMeasWfmSize(getStruct(env, obj)->viSession,arrayMeasFunction,&measWfmSize));
+    return measWfmSize;
 }
 
 JNIEXPORT jint JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_actualRecordLength
@@ -124,10 +256,115 @@ JNIEXPORT jdouble JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_sampleRate
     return actualSampleRate;
 }
 
+JNIEXPORT jint JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_sampleMode
+  (JNIEnv *env, jobject obj){
+   ViInt32 sampleMode;
+   handleErrOverride(niScope_SampleMode(getStruct(env, obj)->viSession, &sampleMode));
+   return sampleMode;
+}
+
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_addWaveformProcessing
+  (JNIEnv *env, jobject obj, jstring channelList, jint measFunction){
+   handleErrOverride(niScope_AddWaveformProcessing(getStruct(env, obj)->viSession,toChars(env, channelList),measFunction)); 
+}
+
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_clearWaveformProcessing
+  (JNIEnv *env, jobject obj, jstring channelList){
+   handleErrOverride(niScope_ClearWaveformProcessing(getStruct(env, obj)->viSession,toChars(env, channelList))); 
+}
+
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_clearWaveformMeasurementStats
+  (JNIEnv *env, jobject obj, jstring channelList, jint measFunction){
+   handleErrOverride(niScope_ClearWaveformMeasurementStats(getStruct(env, obj)->viSession,toChars(env, channelList),measFunction)); 
+}
+
+JNIEXPORT jdouble JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_readMeasurement
+  (JNIEnv *env, jobject obj, jstring channelList, jdouble timeout, jint scalarMeasFunction){
+    ViReal64 result;
+    handleErrOverride(niScope_ReadMeasurement(getStruct(env, obj)->viSession,toChars(env, channelList),timeout,scalarMeasFunction,&result));
+    return result;
+    
+}
+
+
+JNIEXPORT jdouble JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_fetchMeasurement
+  (JNIEnv *env, jobject obj, jstring channelList, jdouble timeout, jint scalarMeasFunction){
+    ViReal64 result;
+    handleErrOverride(niScope_FetchMeasurement(getStruct(env, obj)->viSession,toChars(env, channelList),timeout,scalarMeasFunction,&result));
+    return result;
+    
+}
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_reset
+  (JNIEnv *env, jobject obj){
+    handleErrOverride(niScope_reset(getStruct(env, obj)->viSession));
+}
+
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_disable
+  (JNIEnv *env, jobject obj){
+    handleErrOverride(niScope_Disable(getStruct(env, obj)->viSession));
+}
+
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_resetDevice
+  (JNIEnv *env, jobject obj){
+    handleErrOverride(niScope_ResetDevice(getStruct(env, obj)->viSession));  
+}
+
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_probeCompensationSignalStart
+  (JNIEnv *env, jobject obj){
+   handleErrOverride(niScope_ProbeCompensationSignalStart(getStruct(env, obj)->viSession));  
+}
+
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_probeCompensationSignalStop
+  (JNIEnv *env, jobject obj){
+   handleErrOverride(niScope_ProbeCompensationSignalStop(getStruct(env, obj)->viSession));  
+}
+
+
 JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_setAttributeViBoolean
 (JNIEnv *env, jobject obj, jstring channelList, jint attributeId, jboolean value) {
     niScope_SetAttributeViBoolean(getStruct(env, obj)->viSession, toChars(env, channelList), attributeId, value);
 }
+
+JNIEXPORT jint JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_setDDCFilterCoefficients
+  (JNIEnv *env, jobject obj, jstring channel, jint coefficientType, jint numCoefficients){
+   ViInt32 coefficients;
+   handleErrOverride(niScope_SetDDCFilterCoefficients(getStruct(env, obj)->viSession, toChars(env, channel),coefficientType,numCoefficients,&coefficients)) ;
+   return coefficients;
+}
+
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_calSetSerialDACVoltageEeprom
+  (JNIEnv *env, jobject obj, jfloat serialDACVolts){
+   handleErrOverride(niScope_CalSetSerialDACVoltageEeprom(getStruct(env, obj)->viSession,serialDACVolts));
+}
+
+JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_calSetADCVoltageEeprom
+  (JNIEnv *env, jobject obj, jfloat adcVoltageGain, jfloat adcVoltageOffset){
+   handleErrOverride(niScope_CalSetADCVoltageEeprom(getStruct(env, obj)->viSession,adcVoltageGain,adcVoltageOffset)) ;
+}
+
+JNIEXPORT jfloat JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_calSetFREeprom
+  (JNIEnv *env, jobject obj, jint numCoefficients){
+    ViReal32 polynomialFitCoefficients;
+    handleErrOverride(niScope_CalSetFREeprom(getStruct(env, obj)->viSession,numCoefficients,&polynomialFitCoefficients));
+    return polynomialFitCoefficients;
+}
+
+JNIEXPORT jfloat JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_calGetSerialDACVoltageEeprom
+  (JNIEnv *env, jobject obj){
+    ViReal32 serialDACVolts;
+    handleErrOverride(niScope_CalGetSerialDACVoltageEeprom(getStruct(env, obj)->viSession,&serialDACVolts));
+    return serialDACVolts;
+}
+
+JNIEXPORT jfloat JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_calGetFREeprom
+  (JNIEnv *env, jobject obj, jint numCoefficients){
+    ViReal32 polynomialFitCoefficients;
+    handleErrOverride(niScope_CalGetFREeprom(getStruct(env, obj)->viSession,numCoefficients,&polynomialFitCoefficients));
+    return polynomialFitCoefficients;
+}
+
+
+
 
 JNIEXPORT void JNICALL Java_tw_edu_sju_ee_eea_jni_scope_NIScope_test
 (JNIEnv *env, jobject obj) {

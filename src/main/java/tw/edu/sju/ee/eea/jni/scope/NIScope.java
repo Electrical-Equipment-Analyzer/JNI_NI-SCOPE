@@ -112,6 +112,20 @@ public class NIScope {
     public native void configureChanCharacteristics(String channelList, double inputImpedance, double maxInputFrequency) throws NIScopeException;
 
     //Horizontal Subsystem Configuration ---------------------------------------
+    public static class HorizontalTiming {
+
+        public double minSampleRate = 10000;
+        public int minNumPts = 1024;
+        public double refPosition = 50;
+        public int numRecords = 1;
+        public boolean enforceRealtime = false;
+
+    }
+
+    public void configureHorizontalTiming(HorizontalTiming ht) throws NIScopeException {
+        configureHorizontalTiming(ht.minSampleRate, ht.minNumPts, ht.refPosition, ht.numRecords, ht.enforceRealtime);
+    }
+
     public native void configureHorizontalTiming(double minSampleRate, int minNumPts, double refPosition, int numRecords, boolean enforceRealtime) throws NIScopeException;
 
     public native void configureClock(String inputClockSource, String outputClockSource, String clockSyncPulseSource, boolean masterEnabled) throws NIScopeException;
@@ -147,7 +161,7 @@ public class NIScope {
         public String toString() {
             return getClass().getSimpleName();
         }
-        
+
         public static class Edge extends Trigger {
 
             public int triggerSource = 0;

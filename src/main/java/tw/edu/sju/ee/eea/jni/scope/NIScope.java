@@ -18,6 +18,7 @@
 package tw.edu.sju.ee.eea.jni.scope;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import tw.edu.sju.ee.eea.jni.util.NativeUtils;
@@ -119,6 +120,64 @@ public class NIScope {
 
     public native void adjustSampleClockRelativeDelay(double delay) throws NIScopeException;
 
+    public static void main(String[] args) {
+        Trigger.Edge edge = new Trigger.Edge();
+
+        System.out.println(Arrays.toString(edge.getClass().getFields()));
+    }
+
+    public abstract static class Trigger {
+
+        public enum Slope {
+
+            NEGATIVE, POSITIVE
+        }
+
+        public enum Coupling {
+
+            AC, DC, GND
+        }
+
+        private Trigger() {
+        }
+
+        public abstract void configure(NIScope niScope) throws NIScopeException;
+
+        @Override
+        public String toString() {
+            return getClass().getSimpleName();
+        }
+        
+        public static class Edge extends Trigger {
+
+            public int triggerSource = 0;
+            public double level = 0;
+            public Slope slope = Slope.NEGATIVE;
+            public Coupling triggerCoupling = Coupling.DC;
+            public double holdoff = 0;
+            public double delay = 0;
+
+            @Override
+            public void configure(NIScope niScope) throws NIScopeException {
+                niScope.configureTriggerEdge(String.valueOf(triggerSource), level, slope.ordinal(), triggerCoupling.ordinal(), holdoff, delay);
+            }
+
+        }
+
+        public static class Immediate extends Trigger {
+
+            @Override
+            public void configure(NIScope niScope) throws NIScopeException {
+                niScope.configureTriggerImmediate();
+            }
+        }
+
+    }
+
+    public void configureTrigger(Trigger trigger) throws NIScopeException {
+        trigger.configure(this);
+    }
+
     public native void configureTriggerEdge(String triggerSource, double level, int slope, int triggerCoupling, double holdoff, double delay) throws NIScopeException;
 
     public native void configureTriggerHysteresis(String triggerSource, double level, double hysteresis, int slope, int triggerCoupling, double holdoff, double delay) throws NIScopeException;
@@ -170,7 +229,6 @@ public class NIScope {
     public native int actualMeasWfmSize(int arrayMeasFunction) throws NIScopeException;
 
     //1092
-
     public native int actualRecordLength() throws NIScopeException;
 
     public native double sampleRate() throws NIScopeException;

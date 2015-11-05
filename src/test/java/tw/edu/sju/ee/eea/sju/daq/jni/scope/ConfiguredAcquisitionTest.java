@@ -46,7 +46,7 @@ public class ConfiguredAcquisitionTest extends TestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
     }
-    
+
     public void test() {
         List<NIModinstUtils.Device> list = NIModinstUtils.list("niScope");
         Iterator<NIModinstUtils.Device> iterator = list.iterator();
@@ -78,10 +78,12 @@ public class ConfiguredAcquisitionTest extends TestCase {
 
             niScope.setAttributeViBoolean(channelList, NIScope.ATTR_ENABLE_TIME_INTERLEAVED_SAMPLING, false);
 
-            niScope.configureTriggerImmediate();
+//            niScope.configureTriggerImmediate();
+//            niScope.configureTriggerEdge("0", 0, 0, 0, 0, 0);
+            niScope.configureTrigger(new NIScope.Trigger.Edge());
 
             // Initiate the acquisition
-            niScope.initiateAcquisition();
+//            niScope.initiateAcquisition();
 
             int actualNumWfms = niScope.actualNumWfms(channelList);
             int actualRecordLength = niScope.actualRecordLength();
@@ -91,21 +93,24 @@ public class ConfiguredAcquisitionTest extends TestCase {
             NIScope.WFMInfo wfmInfo[] = new NIScope.WFMInfo[actualNumWfms];
             double waveform[] = new double[actualRecordLength * actualNumWfms];
 
-            // Fetch the data
-            niScope.fetch(channelList, 5, actualRecordLength, waveform, wfmInfo);
+            for (int ttt = 0; ttt < 10; ttt++) {
+                niScope.initiateAcquisition();
+                // Fetch the data
+                niScope.fetch(channelList, 5, actualRecordLength, waveform, wfmInfo);
 
-            double sampleRate = niScope.sampleRate();
+                double sampleRate = niScope.sampleRate();
 
-            System.out.println("Actual record length: " + actualRecordLength);
-            System.out.println("Actual sample rate: " + sampleRate);
+                System.out.println("Actual record length: " + actualRecordLength);
+                System.out.println("Actual sample rate: " + sampleRate);
 
-            for (int i = 0; i < wfmInfo.length; i++) {
-                System.out.println(wfmInfo[i]);
+                for (int i = 0; i < wfmInfo.length; i++) {
+                    System.out.println(wfmInfo[i]);
+                }
+
+                System.out.println(Arrays.toString(Arrays.copyOfRange(waveform, 0, actualRecordLength)));
+                System.out.println(Arrays.toString(Arrays.copyOfRange(waveform, actualRecordLength, actualRecordLength * 2)));
+
             }
-            
-            System.out.println(Arrays.toString(Arrays.copyOfRange(waveform, 0, actualRecordLength)));
-            System.out.println(Arrays.toString(Arrays.copyOfRange(waveform, actualRecordLength, actualRecordLength * 2)));
-
         } catch (NIScopeException ex) {
             Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex);
         } finally {

@@ -236,6 +236,29 @@ public class NIScope {
 
     //1073
     //1081
+    public enum acquisitionStatus {
+
+        COMPLETE,
+        IN_PROGRESS,
+        STATUS_UNKNOWN;
+
+        static acquisitionStatus valueOf(int val) {
+            switch (val) {
+                case 0:
+                    return IN_PROGRESS;
+                case 1:
+                    return COMPLETE;
+                default:
+                    return STATUS_UNKNOWN;
+            }
+        }
+
+    }
+
+    public acquisitionStatus getAcquisitionStatus() throws NIScopeException {
+        return acquisitionStatus.valueOf(acquisitionStatus());
+    }
+
     public native int acquisitionStatus() throws NIScopeException;
 
     public native int actualNumWfms(String channelList) throws NIScopeException;

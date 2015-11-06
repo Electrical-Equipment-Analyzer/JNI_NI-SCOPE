@@ -107,6 +107,20 @@ public class NIScope {
     public native void autoSetup() throws NIScopeException;
 
     //Vertical Subsystem Configuration -----------------------------------------
+    public static class Vertical {
+
+        public String channelList = "0,1";
+        public double range = 10;
+        public double offset = 0;
+        public Coupling coupling = Coupling.DC;
+        public double probeAttenuation = 1;
+        public boolean enabled = true;
+    }
+    
+    public void configureVertical(Vertical v) throws NIScopeException {
+        configureVertical(v.channelList, v.range, v.offset, v.coupling.ordinal(), v.probeAttenuation, v.enabled);
+    }
+
     public native void configureVertical(String channelList, double range, double offset, int coupling, double probeAttenuation, boolean enabled) throws NIScopeException;
 
     public native void configureChanCharacteristics(String channelList, double inputImpedance, double maxInputFrequency) throws NIScopeException;
@@ -140,16 +154,16 @@ public class NIScope {
         System.out.println(Arrays.toString(edge.getClass().getFields()));
     }
 
+        public enum Coupling {
+
+            AC, DC, GND
+        }
+
     public abstract static class Trigger {
 
         public enum Slope {
 
             NEGATIVE, POSITIVE
-        }
-
-        public enum Coupling {
-
-            AC, DC, GND
         }
 
         private Trigger() {
